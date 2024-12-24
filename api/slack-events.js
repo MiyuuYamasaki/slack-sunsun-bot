@@ -1,5 +1,7 @@
-import { json } from '@vercel/node';
+import vercel from '@vercel/node';
 import crypto from 'crypto';
+
+const { json } = vercel;
 
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET; // GitHub Secretsで設定した値
 
