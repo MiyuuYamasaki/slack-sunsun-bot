@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 // 環境変数の取得
 const SLACK_TOKEN_1 = process.env.SLACK_TOKEN_1;

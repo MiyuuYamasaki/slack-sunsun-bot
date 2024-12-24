@@ -1,5 +1,4 @@
 import vercel from '@vercel/node';
-import axios from 'axios';
 import crypto from 'crypto';
 
 const { json } = vercel;
