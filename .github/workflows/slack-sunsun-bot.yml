@@ -28,4 +28,5 @@ jobs:
           SLACK_TOKEN_2: ${{ secrets.SLACK_TOKEN_2 }}
           CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
           CHANNEL_ID_2: ${{ secrets.CHANNEL_ID_2 }}
-        run: node main.js
+        run: |
+          node main.js || echo "Error occurred during script execution."
