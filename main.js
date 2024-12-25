@@ -83,7 +83,7 @@ async function fetchAndPostMessages() {
 
 async function postFailureMessage() {
   const today = getTodayInfo();
-  const message = `⚠️ ${today.dateText} の「SUNSUN食堂のメニュー」のメッセージが見つかりませんでした 😢`;
+  const message = `${today.dateText} の「SUNSUN食堂のメニュー」が見つかりませんでした 😢`;
 
   try {
     await axios.post(
