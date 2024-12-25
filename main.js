@@ -13,6 +13,8 @@ const POLLING_TIMEOUT = 2 * 60 * 60 * 1000; // 2時間 (9時～11時)
 // 今日の日付と曜日を取得
 function getTodayInfo() {
   const now = new Date();
+  // 日本時間に合わせる（UTC + 9 時間）
+  now.setHours(now.getHours() + 9);
   const dayOfWeekMap = ['日', '月', '火', '水', '木', '金', '土'];
   const month = now.getMonth() + 1; // 月は0始まり
   const date = now.getDate();
