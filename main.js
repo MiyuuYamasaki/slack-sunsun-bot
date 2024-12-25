@@ -6,6 +6,10 @@ const SLACK_TOKEN_2 = process.env.SLACK_TOKEN_2;
 const CHANNEL_ID_1 = process.env.CHANNEL_ID_1;
 const CHANNEL_ID_2 = process.env.CHANNEL_ID_2;
 
+// ポーリング間隔 (ミリ秒)
+const POLLING_INTERVAL = 5 * 60 * 1000; // 5分
+const POLLING_TIMEOUT = 2 * 60 * 60 * 1000; // 2時間 (9時～11時)
+
 // 今日の日付と曜日を取得
 function getTodayInfo() {
   const now = new Date();
@@ -38,7 +42,7 @@ async function fetchAndPostMessages() {
 
     if (!response.data.ok) {
       console.error('メッセージの取得に失敗:', response.data.error);
-      return;
+      return false;
     }
 
     // 条件に合うメッセージを探す
@@ -50,7 +54,7 @@ async function fetchAndPostMessages() {
 
     if (!targetMessage) {
       console.log('条件に一致するメッセージが見つかりませんでした。');
-      return;
+      return false;
     }
 
     console.log('取得したメッセージ:', targetMessage.text);
@@ -70,9 +74,32 @@ async function fetchAndPostMessages() {
     );
 
     console.log('メッセージを送信しました');
+    return true; // 成功した場合はtrueを返す
   } catch (error) {
     console.error('エラー:', error.message);
+    return false;
   }
 }
 
-fetchAndPostMessages();
+// ポーリング関数
+async function startPolling() {
+  const startTime = Date.now();
+
+  const poll = async () => {
+    if (Date.now() - startTime > POLLING_TIMEOUT) {
+      console.log('ポーリングタイムアウト: メッセージが見つかりませんでした。');
+      return;
+    }
+
+    const success = await fetchAndPostMessages();
+    if (!success) {
+      console.log(`再試行まで${POLLING_INTERVAL / 60000}分待機します...`);
+      setTimeout(poll, POLLING_INTERVAL);
+    }
+  };
+
+  await poll();
+}
+
+// ポーリング開始
+startPolling();

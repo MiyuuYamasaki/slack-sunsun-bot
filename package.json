@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "main": "main.js",
   "dependencies": {
-    "@now/build-utils": "^2.7.0",
-    "@vercel/node": "^5.0.0",
     "axios": "^1.0.0",
     "typescript": "^5.7.2"
   },
