@@ -81,18 +81,47 @@ async function fetchAndPostMessages() {
   }
 }
 
+async function postFailureMessage() {
+  const today = getTodayInfo();
+  const message = `⚠️ ${today.dateText} の「SUNSUN食堂のメニュー」のメッセージが見つかりませんでした 😢`;
+
+  try {
+    await axios.post(
+      'https://slack.com/api/chat.postMessage',
+      {
+        channel: CHANNEL_ID_2,
+        text: message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${SLACK_TOKEN_2}`,
+        },
+      }
+    );
+    console.log('失敗メッセージを送信しました');
+  } catch (error) {
+    console.error('失敗メッセージの送信エラー:', error.message);
+  }
+}
+
 // ポーリング関数
 async function startPolling() {
   const startTime = Date.now();
+  let messageFound = false;
 
   const poll = async () => {
     if (Date.now() - startTime > POLLING_TIMEOUT) {
-      console.log('ポーリングタイムアウト: メッセージが見つかりませんでした。');
+      if (!messageFound) {
+        console.log(
+          'ポーリングタイムアウト: メッセージが見つかりませんでした。'
+        );
+        await postFailureMessage(); // 取得に失敗した場合に通知
+      }
       return;
     }
 
-    const success = await fetchAndPostMessages();
-    if (!success) {
+    messageFound = await fetchAndPostMessages();
+    if (!messageFound) {
       console.log(`再試行まで${POLLING_INTERVAL / 60000}分待機します...`);
       setTimeout(poll, POLLING_INTERVAL);
     }
