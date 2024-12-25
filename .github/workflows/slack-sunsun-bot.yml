@@ -2,8 +2,8 @@ name: Slack SunSun Bot
 
 on:
   schedule:
-    # 毎日朝09:05に実行
-    - cron: '5 0 * * 0-4'
+    # 毎日朝09:00に実行
+    - cron: '0 0 * * 0-4'
   workflow_dispatch: # 手動で実行できるようにする
 
 jobs:
