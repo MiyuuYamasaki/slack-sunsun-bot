@@ -15,12 +15,13 @@ function getTodayInfo() {
   const now = new Date();
   // 日本時間に合わせる（UTC + 9 時間）
   now.setHours(now.getHours() + 9);
-  const dayOfWeekMap = ['日', '月', '火', '水', '木', '金', '土'];
+  // const dayOfWeekMap = ['日', '月', '火', '水', '木', '金', '土'];
   const month = now.getMonth() + 1; // 月は0始まり
   const date = now.getDate();
-  const dayOfWeek = dayOfWeekMap[now.getDay()];
+  // const dayOfWeek = dayOfWeekMap[now.getDay()];
   return {
-    dateText: `${month}/${date}（${dayOfWeek}）`,
+    // dateText: `${month}/${date}（${dayOfWeek}）`,
+    dateText: `${month}/${date}`,
     fullDate: `${now.getFullYear()}-${String(month).padStart(2, '0')}-${String(
       date
     ).padStart(2, '0')}`,
