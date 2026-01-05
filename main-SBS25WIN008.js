@@ -15,12 +15,13 @@ function getTodayInfo() {
   const now = new Date();
   // 日本時間に合わせる（UTC + 9 時間）
   now.setHours(now.getHours() + 9);
-  const dayOfWeekMap = ['日', '月', '火', '水', '木', '金', '土'];
+  // const dayOfWeekMap = ['日', '月', '火', '水', '木', '金', '土'];
   const month = now.getMonth() + 1; // 月は0始まり
   const date = now.getDate();
-  const dayOfWeek = dayOfWeekMap[now.getDay()];
+  // const dayOfWeek = dayOfWeekMap[now.getDay()];
   return {
-    dateText: `${month}/${date}（${dayOfWeek}）`,
+    // dateText: `${month}/${date}（${dayOfWeek}）`,
+    dateText: `${month}/${date}`,
     fullDate: `${now.getFullYear()}-${String(month).padStart(2, '0')}-${String(
       date
     ).padStart(2, '0')}`,
@@ -30,12 +31,6 @@ function getTodayInfo() {
 async function fetchAndPostMessages() {
   const today = getTodayInfo();
   console.log('今日の日付:', today.dateText);
-
-  // 今日の0時（日本時間）と7日前の0時（日本時間）のタイムスタンプを計算
-  const now = new Date();
-  now.setHours(now.getHours() + 9, 0, 0, 0); // 日本時間の今日0時
-  const todayStart = Math.floor(now.getTime() / 1000);
-  const weekAgo = todayStart - 7 * 24 * 60 * 60;
 
   try {
     // ワークスペース1からメッセージを取得
@@ -53,14 +48,8 @@ async function fetchAndPostMessages() {
       return false;
     }
 
-    // 1週間以内のメッセージのみ抽出
-    const recentMessages = response.data.messages.filter((message) => {
-      const ts = Number(message.ts);
-      return ts >= weekAgo && ts < todayStart + 24 * 60 * 60; // 今日0時～翌日0時未満
-    });
-
     // 条件に合うメッセージを探す
-    const targetMessage = recentMessages.find(
+    const targetMessage = response.data.messages.find(
       (message) =>
         message.text.includes(today.dateText) &&
         message.text.includes('SUNSUN食堂のメニュー')
